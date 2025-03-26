@@ -20,13 +20,22 @@ class LandingAIDocumentExtractor:
         """
         self.api_key = api_key
         self.base_url = "https://api.va.landing.ai/v1/tools/agentic-document-analysis"
-        # Ensure the API key is properly formatted
+        
+        # Debug API key format
+        print(f"API Key length: {len(api_key)}")
+        print(f"API Key starts with 'Basic': {api_key.startswith('Basic ')}")
+        
+        # Format API key
         if not api_key.startswith('Basic '):
             api_key = f"Basic {api_key}"
+        
         self.headers = {
             "Authorization": api_key,
             "Accept": "application/json"
         }
+        
+        # Debug headers
+        print(f"Headers: {self.headers}")
 
     def extract_pages_from_pdf(self, input_path: str, start_page: int, end_page: int) -> str:
         """
@@ -160,6 +169,9 @@ class LandingAIDocumentExtractor:
             Dict[str, Any]: Extracted structured information
         """
         try:
+            # Debug API key before request
+            print(f"Using API key: {self.api_key[:10]}...")  # Only print first 10 chars for security
+            
             # If PDF and page range specified, extract those pages first
             if file_type == "pdf" and start_page is not None and end_page is not None:
                 print(f"Extracting pages {start_page} to {end_page} from PDF...")
@@ -175,6 +187,7 @@ class LandingAIDocumentExtractor:
                 print(f"Sending request to {self.base_url}")
                 print(f"Using file parameter: {file_param}")
                 print(f"File name: {os.path.basename(file_path)}")
+                print(f"Request headers: {self.headers}")
                 
                 # Make the API request
                 response = requests.post(
@@ -188,6 +201,7 @@ class LandingAIDocumentExtractor:
                 print(f"Response headers: {response.headers}")
                 if response.status_code != 200:
                     print(f"Response content: {response.text}")
+                    print(f"Request headers sent: {self.headers}")
                 
                 # Check if the request was successful
                 response.raise_for_status()
