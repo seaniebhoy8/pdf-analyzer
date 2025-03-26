@@ -20,8 +20,11 @@ class LandingAIDocumentExtractor:
         """
         self.api_key = api_key
         self.base_url = "https://api.va.landing.ai/v1/tools/agentic-document-analysis"
+        # Ensure the API key is properly formatted
+        if not api_key.startswith('Basic '):
+            api_key = f"Basic {api_key}"
         self.headers = {
-            "Authorization": f"Basic {api_key}",
+            "Authorization": api_key,
             "Accept": "application/json"
         }
 
